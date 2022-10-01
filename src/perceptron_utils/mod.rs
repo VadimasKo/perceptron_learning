@@ -1,38 +1,32 @@
-mod activation;
-mod user_inputs;
+use crate::data_utils::DataLine;
 
-use crate::data_utils;
-use activation::*;
-use user_inputs::*;
+pub fn step_activation(a: f32) -> f32 {
+  return if a >= 0.0 { 1.0 } else { 0.0 } 
+} 
 
-pub fn run_training() -> std::io::Result<()> {
-  let mut _data_name = String::new();
-  let mut _output = String::new();
-  let activation_fun = &step_activation;
-  let epoch = 100;
-  let learn_rate = 0.1;
+pub fn sigmoid_activation(a: f32) -> f32 {
+  let e = std::f32::consts::E;
+  return 1.0 / (1.0 + e.powf(-a));
+}
 
-  _data_name = select_dataset()?;
-  select_activation(activation_fun)?;
-  select_vars(epoch, learn_rate)?;
-  _output = format!("{}_e{}_l{}.data", _data_name, epoch, learn_rate);
+pub fn adeline(wheights: &mut Vec<f32>,line: &DataLine, output:f32, learn_rate: f32) {
+  let gradient = 2.0 * (line.t - output);
+  for i in 1..wheights.len() {
+    // handle bias
+    if i == 0 {
+      wheights[0] += gradient * learn_rate;
+    } else {
+      wheights[i] += gradient * line.x[i-1] * learn_rate; 
+    }
 
-  let training_set = match _data_name.as_str() {
-    "cancer" => data_utils::read_cancer("training.data"),
-    _ => data_utils::read_iris("training.data"),
-  };
-
-  let mut wheights: Vec<f64> = Vec::new();
-  
-  while wheights.len() < training_set[0].len() {
-    wheights.push(0.0);
   }
+}
 
-  for _i in 0..epoch {
-    // println!("{}", i);
+pub fn calc_y(wheights: &Vec<f32>, inputs: &Vec<f32>) -> f32 {
+  let mut sum: f32 = 1.0;
+  for i in 0..wheights.len() {
+    if i == 0 { sum *= wheights[i] }
+    else { sum += wheights[i] * inputs[i-1] }
   }
-
-
-  
-  Ok(())
+  return sum;
 }

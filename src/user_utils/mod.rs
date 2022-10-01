@@ -1,10 +1,11 @@
+use crate::perceptron_utils::{ step_activation, sigmoid_activation };
 use dialoguer::{ Select, theme::ColorfulTheme };
 use console::{ Term, style };
-use super::activation::*;
 
-pub fn select_dataset() -> std::io::Result<String> {
+
+pub fn select_dataset() -> std::io::Result<(String, i32)> {
   std::process::Command::new("clear").status().unwrap();
-  let options = vec!["breastCancer.data", "iris.data"];
+  let options = vec!["breastCancer", "iris"];
       
   println!("{}", style("Select dataset:").bold().yellow());
   let selection = Select::with_theme(&ColorfulTheme::default())
@@ -13,12 +14,12 @@ pub fn select_dataset() -> std::io::Result<String> {
     .interact_on_opt(&Term::stderr())?;
 
   match selection {
-    Some(0) => return Ok("cancer".to_owned()),
-    _ => return Ok("iris".to_owned()),
+    Some(0) => return Ok(("breastCancer/".to_owned(), 10)),
+    _ => return Ok(("iris/".to_owned(), 5)),
   }
 }
 
-pub fn select_vars(mut _epoch: i32, mut _learn_rate: f64) -> std::io::Result<()> {
+pub fn select_vars() -> std::io::Result<(i32, f32)> {
   std::process::Command::new("clear").status().unwrap();
   let options = vec![
     "epoch: 100, learn: 0.1",
@@ -33,23 +34,13 @@ pub fn select_vars(mut _epoch: i32, mut _learn_rate: f64) -> std::io::Result<()>
     .interact_on_opt(&Term::stderr())?;
 
   match selection {
-    Some(0) => {
-      _learn_rate = 0.1;
-      _epoch = 100;
-    },
-    Some(1) => {
-      _epoch = 100;
-      _learn_rate = 0.01;
-    },
-    _ => {
-      _epoch = 100;
-      _learn_rate = 0.001;
-    }
+    Some(1) => Ok((100, 0.01)),
+    Some(2) => Ok((100, 0.001)),
+    _ => Ok((100, 0.1))
   }
-  Ok(())
 }
 
-pub fn select_activation(mut _f:&dyn Fn(f64) -> f64) -> std::io::Result<()>  {
+pub fn select_activation() -> std::io::Result<fn(f32) -> f32> {
   std::process::Command::new("clear").status().unwrap();
   let options = vec!["Step activation", "Sigmoid activation"];
       
@@ -60,8 +51,7 @@ pub fn select_activation(mut _f:&dyn Fn(f64) -> f64) -> std::io::Result<()>  {
     .interact_on_opt(&Term::stderr())?;
 
   match selection {
-    Some(0) => _f = &step_activation,
-    _ => _f = &sigmoid_activation,
+    Some(0) =>  Ok(step_activation),
+    _       =>  Ok(sigmoid_activation)
   }
-  Ok(())
 }
