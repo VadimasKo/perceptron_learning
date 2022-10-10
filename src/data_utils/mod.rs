@@ -1,4 +1,6 @@
-use std::fs;
+use std::{fs::{self}};
+
+use crate::chart_utils::OutputLine;
 
 pub struct DataLine {
   pub x: Vec<f32>,
@@ -23,4 +25,20 @@ pub fn read_data(file_name: &str, expected_size: i32) -> Vec<DataLine> {
   }
   
   return data;
+}
+
+pub fn write_stats(output: &Vec<OutputLine>) -> std::io::Result<()> {
+  let mut output_string = String::new();
+
+  for line in output {
+    output_string.push_str(&format!{"{}", line.error_median});
+
+    for wheight in &line.wheights {
+      output_string.push_str(&format!("{} ", wheight));
+    }
+    output_string.push_str("\n");
+  }
+
+  fs::write("./output/test.data",output_string).expect("Unable to write file");
+  Ok(())
 }

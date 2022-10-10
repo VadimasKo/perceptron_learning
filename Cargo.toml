@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 console = "0.15.1"
 dialoguer = "0.10.2"
+plotters = "0.3.4"

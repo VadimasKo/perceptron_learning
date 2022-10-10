@@ -45,11 +45,17 @@ fn main() -> std::io::Result<()> {
 
   // Final testing
   std::process::Command::new("clear").status().unwrap();
-  println!("{}", style("Final stats using training data:").bold().yellow());
+  println!("{}", style("Final wheights:").bold().yellow());
+  for wheight in &wheights {
+    print!("{} ", wheight)
+  }
+  println!("\n\n{}", style("Final stats using training data:").bold().yellow());
   test_wheights(&training_data, &wheights, &activation);
   println!("{}", style("\nFinal stats using testing data:").bold().yellow());
   test_wheights(&testing_data, &wheights, &activation);
   print_out_config(learn_rate, epoch, &data_name, activation(0.5) == 1.0);
+  data_utils::write_stats(&output)?;
+  chart_utils::chart_output(output);
 
   Ok(())
 }

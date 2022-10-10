@@ -61,7 +61,7 @@ pub fn print_out_config(learn_rate: f32, epoch: i32, data_name: &str, using_step
 
   println!("{}", style("\nConfiguration:").bold().yellow());
   println!("Data set:        {}", style(data_name).yellow());
+  println!("Activation func: {}", style(activation).yellow());
   println!("Learning Rate:   {}", style(format!("{}", learn_rate)).yellow());
   println!("Nr of cycles:    {}", style(format!("{}", epoch)).yellow());
-  println!("Activation func: {}", style(activation).yellow());
 }
