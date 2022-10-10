@@ -24,7 +24,7 @@ pub fn select_vars() -> std::io::Result<(i32, f32)> {
   let options = vec![
     "epoch: 100, learn: 1.0",
     "epoch: 100, learn: 0.1",
-    "epoch: 100, learn: 0.01",
+    "epoch: 1000, learn: 0.01",
   ];
       
   println!("{}", style("Select number of epochs and learning rate:").bold().yellow());
@@ -35,7 +35,7 @@ pub fn select_vars() -> std::io::Result<(i32, f32)> {
 
   match selection {
     Some(1) => Ok((100, 0.1)),
-    Some(2) => Ok((100, 0.01)),
+    Some(2) => Ok((1000, 0.01)),
     _ => Ok((100, 1.0))
   }
 }
