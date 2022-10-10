@@ -55,7 +55,10 @@ fn main() -> std::io::Result<()> {
   test_wheights(&testing_data, &wheights, &activation);
   print_out_config(learn_rate, epoch, &data_name, activation(0.5) == 1.0);
   data_utils::write_stats(&output)?;
-  chart_utils::chart_output(output);
+  match chart_utils::chart_output(output) {
+    Ok(()) => print!(""),
+    _ => println!("Failed to plot the chart")
+  }
 
   Ok(())
 }
