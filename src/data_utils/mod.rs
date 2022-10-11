@@ -31,10 +31,11 @@ pub fn write_stats(output: &Vec<OutputLine>) -> std::io::Result<()> {
   let mut output_string = String::new();
 
   for line in output {
-    output_string.push_str(&format!{"{}", line.error_median});
+    output_string.push_str(&format!("{:.1$} \t", line.error_median, 1), );
+    output_string.push_str(&format!("{:.1$}% \t", line.accuracy, 2));
 
     for wheight in &line.wheights {
-      output_string.push_str(&format!("{} ", wheight));
+      output_string.push_str(&format!("{:.1$} ", wheight, 1));
     }
     output_string.push_str("\n");
   }

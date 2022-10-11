@@ -25,21 +25,21 @@ fn main() -> std::io::Result<()> {
 
   // neuoron training
   for _i in 0..epoch {
-    let mut squared_error = 0.0;
-
     for data_line in &training_data {
       let y = calc_y(&wheights, &data_line.x);
       let output = activation(y);
-      squared_error += (output - data_line.t).powi(2);
 
       if output != data_line.t {
         adeline(&mut wheights, data_line, output, learn_rate);
       }
     }
 
+    let (accuracy, error_median) = test_wheights(&training_data, &wheights, &activation);
+
     output.push(OutputLine{
+      accuracy,
+      error_median,
       wheights: wheights.clone(),
-      error_median: squared_error/training_data.len() as f32
     });
   }
 
@@ -49,11 +49,19 @@ fn main() -> std::io::Result<()> {
   for wheight in &wheights {
     print!("{} ", wheight)
   }
+
   println!("\n\n{}", style("Final stats using training data:").bold().yellow());
-  test_wheights(&training_data, &wheights, &activation);
+  let (acc, error) = test_wheights(&training_data, &wheights, &activation);
+  println!("Accuracy     -> {}", acc);
+  println!("Error Median -> {}", error);
+
   println!("{}", style("\nFinal stats using testing data:").bold().yellow());
-  test_wheights(&testing_data, &wheights, &activation);
+  let (acc, error) = test_wheights(&testing_data, &wheights, &activation);
+  println!("Accuracy     -> {}", acc);
+  println!("Error Median -> {}", error);
+
   print_out_config(learn_rate, epoch, &data_name, activation(0.5) == 1.0);
+  
   data_utils::write_stats(&output)?;
   match chart_utils::chart_output(output) {
     Ok(()) => print!(""),

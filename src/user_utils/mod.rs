@@ -1,6 +1,7 @@
 use crate::perceptron_utils::{ step_activation, sigmoid_activation };
 use dialoguer::{ Select, theme::ColorfulTheme };
 use console::{ Term, style };
+use text_io::*;
 
 
 pub fn select_dataset() -> std::io::Result<(String, i32)> {
@@ -25,6 +26,7 @@ pub fn select_vars() -> std::io::Result<(i32, f32)> {
     "epoch: 100, learn: 1.0",
     "epoch: 100, learn: 0.1",
     "epoch: 1000, learn: 0.01",
+    "Custom Input"
   ];
       
   println!("{}", style("Select number of epochs and learning rate:").bold().yellow());
@@ -36,9 +38,22 @@ pub fn select_vars() -> std::io::Result<(i32, f32)> {
   match selection {
     Some(1) => Ok((100, 0.1)),
     Some(2) => Ok((1000, 0.01)),
+    Some(3) => enter_custom_vars(),
     _ => Ok((100, 1.0))
   }
 }
+
+pub fn enter_custom_vars() -> std::io::Result<(i32, f32)> {
+  std::process::Command::new("clear").status().unwrap();
+  println!("{}", style("Enter epoch count:").bold().yellow());
+  let epoch: i32 = read!();
+
+  println!("{}", style("Enter learning rate:").bold().yellow());
+  let learn_rate: f32 = read!();
+
+  Ok((epoch, learn_rate))
+}
+
 
 pub fn select_activation() -> std::io::Result<fn(f32) -> f32> {
   std::process::Command::new("clear").status().unwrap();

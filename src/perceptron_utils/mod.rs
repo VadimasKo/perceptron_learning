@@ -34,7 +34,7 @@ pub fn is_class_correct(class: f32, t: f32) -> bool {
   return class >= 0.5 && t == 1.0 || class < 0.5 && t == 0.0;
 }
 
-pub fn test_wheights(data: &Vec<DataLine>, wheights: &Vec<f32>, activation: &dyn Fn(f32) -> f32) {
+pub fn test_wheights(data: &Vec<DataLine>, wheights: &Vec<f32>, activation: &dyn Fn(f32) -> f32) -> (f32, f32){
   let mut correct_count = 0.0;
   let mut squared_error = 0.0;
 
@@ -46,9 +46,8 @@ pub fn test_wheights(data: &Vec<DataLine>, wheights: &Vec<f32>, activation: &dyn
     if is_class_correct(output, data_line.t) { correct_count += 1.0 }
   }
 
-  let accuracy = correct_count/data.len() as f32;
+  let accuracy = correct_count/data.len() as f32 * 100.0;
   let error_median = squared_error/data.len() as f32;
 
-  println!("Accuracy     -> {}", accuracy);
-  println!("Error Median -> {}", error_median);
+  return (accuracy, error_median)
 }
